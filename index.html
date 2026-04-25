@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHire AI - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 h-screen flex flex-col font-sans overflow-hidden">
+
+    <!-- TOP NAV BAR -->
+    <nav class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm z-10">
+        <div class="flex items-center gap-3 w-1/4">
+            <button onclick="toggleFilters()" class="bg-blue-600 hover:bg-blue-700 text-white w-8 h-8 rounded-lg flex items-center justify-center transition-colors shadow-sm">
+                <i class="fas fa-filter text-xs"></i>
+            </button>
+            <div class="flex items-center gap-2">
+                <div class="bg-blue-600 p-2 rounded-lg text-white">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <h1 class="text-xl font-bold text-gray-800 leading-none">TalentIQ <span class="text-blue-600 font-bold">Pro</span></h1>
+            </div>
+        </div>
+
+        <!-- NAVIGATION MENU -->
+        <div class="flex items-center gap-6">
+            <a href="index.html" class="text-sm font-bold text-blue-600 border-b-2 border-blue-600 pb-1">Dashboard</a>
+            <a href="jobs.html" class="text-sm font-medium text-gray-500 hover:text-blue-600 transition">Jobs</a>
+        </div>
+
+        <div class="flex items-center gap-6 w-1/4 justify-end">
+            <div class="text-sm text-gray-500 font-medium text-xs hidden lg:block text-right leading-tight">
+                <span class="font-bold text-gray-800">5,247</span> Resumes |
+                <span class="font-bold text-blue-600 font-bold">124</span> Matches
+            </div>
+            <button class="bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition relative">
+                <i class="fas fa-bell text-gray-600 text-sm"></i>
+                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
+            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-700 text-sm border border-white shadow-sm">HR</div>
+        </div>
+    </nav>
+
+    <!-- MAIN LAYOUT -->
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- LEFT SIDEBAR (Collapsible) -->
+        <aside id="left-sidebar" class="w-64 bg-white border-r border-gray-200 p-4 overflow-y-auto transition-all duration-300 ease-in-out">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xs font-bold text-gray-700 flex items-center gap-2 uppercase tracking-widest">
+                    <i class="fas fa-filter text-blue-500 text-[10px]"></i> Smart Filters
+                </h2>
+                <button class="text-xs font-bold text-blue-600 hover:text-blue-800 underline">Reset All</button>
+            </div>
+            
+            <div class="space-y-6">
+                <!-- CANDIDATE STATUS -->
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-2 leading-none">Candidate Status</label>
+                    <select class="w-full p-2 border border-gray-200 rounded text-sm text-gray-700 outline-none bg-gray-50">
+                        <option>All Status</option>
+                        <option>Shortlisted</option>
+                        <option>Hold On</option>
+                        <option>Rejected</option>
+                        <option>selected</option>
+                    </select>
+                </div>
+
+              
+
+                <!-- STABILITY -->
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-2 leading-none">Stability Index</label>
+                    <select class="w-full p-2 border border-gray-200 rounded text-sm text-gray-700 outline-none bg-gray-50">
+                        <option>All Candidates</option>
+                        <option>Min. 2+ year per job</option>
+                        <option>Min. 1+ year per job</option>
+                    </select>
+                </div>
+
+                <!-- MATCH SCORE SLIDER -->
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase mb-2 block leading-none tracking-widest">Match Score (%)</label>
+                    <input type="range" class="w-full accent-blue-600" value="75">
+                    <div class="flex justify-between text-[10px] text-gray-400 mt-1 font-bold"><span>0%</span><span>100%</span></div>
+                </div>
+
+                <!-- EXPECTED CTC SLIDER -->
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase mb-2 block leading-none tracking-widest">Expected CTC (LPA)</label>
+                    <input type="range" class="w-full accent-blue-600" value="50">
+                    <div class="flex justify-between text-[10px] text-gray-400 mt-1 font-bold"><span>5L</span><span>50L+</span></div>
+                </div>
+
+                <!-- EXPERIENCE -->
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase mb-2 block tracking-widest leading-none">Experience</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center text-xs font-medium text-gray-600 cursor-pointer hover:text-blue-600 transition"><input type="checkbox" class="mr-2"> Fresher</label>
+                        <label class="flex items-center text-xs font-medium text-gray-600 cursor-pointer hover:text-blue-600 transition"><input type="checkbox" class="mr-2" checked> 1-3 Years</label>
+                        <label class="flex items-center text-xs font-medium text-gray-600 cursor-pointer hover:text-blue-600 transition"><input type="checkbox" class="mr-2"> 5+ Years</label>
+                        
+                    </div>
+                </div>
+
+                
+
+            </div>
+        </aside>
+
+       <!-- CENTER CONTENT -->
+        <main class="flex-1 overflow-y-auto p-4 bg-gray-50 font-medium transition-all duration-300">
+
+            <!-- CANDIDATE SEARCH BAR -->
+            <div class="mb-4">
+                <div class="relative">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                    <input
+                        type="text"
+                        id="candidate-search"
+                        placeholder="Search candidates by name, company, skills, college..."
+                        oninput="filterCandidates(this.value)"
+                        class="w-full pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-700 placeholder-gray-400 outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+                    >
+                    <button onclick="document.getElementById('candidate-search').value=''; filterCandidates('');" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500 transition hidden" id="search-clear">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-4 text-[10px] font-bold uppercase tracking-wider">
+                <div class="flex gap-2">
+                    <button class="bg-blue-600 text-white px-3 py-1 rounded shadow-sm hover:bg-blue-700 transition">Bulk Shortlist</button>
+                    <button class="bg-white border border-gray-200 text-gray-600 px-3 py-1 rounded hover:bg-gray-50 transition">Export CSV</button>
+                </div>
+                <div class="text-gray-400 italic">Showing 124 candidates</div>
+            </div>
+
+            <!-- TABLE -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 border-b border-gray-200 text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                        <tr>
+                            <th class="py-2 px-4 w-12">Rank</th>
+                            <th class="py-2 px-4">Candidate Information</th>
+                            <th class="py-2 px-4 text-center">Exp</th>
+                            <th class="py-2 px-4 text-center">AI Score</th>
+                            <th class="py-2 px-4 text-center">CTC (LPA)</th> <!-- Editable Column -->
+                            <th class="py-2 px-4 text-red-500 text-center">Missing</th>
+                            <th class="py-2 px-4 text-center">Reject</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <!-- Candidate 1 -->
+                        <tr class="hover:bg-blue-50 cursor-pointer transition" onclick="openRightBar('rahul')">
+                            <td class="py-2 px-4 text-[10px] font-bold text-gray-400">#01</td>
+                            <td class="py-2 px-4 flex items-center gap-2">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-[10px] border border-white shadow-sm">RK</div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-800 leading-none">Rahul Kumar <span class="text-[7px] bg-amber-100 text-amber-700 px-1 rounded font-black">REF</span></p>
+                                    <p class="text-[10px] text-blue-500 mt-1 font-bold">SDE-2 @ Amazon | IIT Roorkee</p>
+                                </div>
+                            </td>
+                            <td class="py-2 px-4 text-[10px] font-bold text-gray-700 text-center whitespace-nowrap">4.5 Yrs</td>
+                            <td class="py-2 px-4 text-[10px] font-bold text-green-600 text-center font-mono">92%</td>
+                            <td class="py-2 px-4 text-center">
+                                <input type="text" value="32L" onclick="event.stopPropagation();" class="w-16 text-center bg-gray-50 border border-gray-200 rounded font-bold text-[10px] py-1 outline-none focus:ring-1 focus:ring-blue-500">
+                            </td>
+                            <td class="py-2 px-4 text-center text-[9px] text-red-600 font-bold">DOCKER</td>
+                            <td class="py-2 px-4 text-center">
+                                <button onclick="event.stopPropagation();" class="text-red-600 hover:text-red-800"><i class="fas fa-times-circle text-lg"></i></button>
+                            </td>
+                        </tr>
+
+                        <!-- Candidate 2 -->
+                        <tr class="hover:bg-blue-50 cursor-pointer transition" onclick="openRightBar('priya')">
+                            <td class="py-2 px-4 text-[10px] font-bold text-gray-400">#02</td>
+                            <td class="py-2 px-4 flex items-center gap-2">
+                                <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold text-[10px]">PS</div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-800 leading-none">Priya Sharma</p>
+                                    <p class="text-[10px] text-blue-500 mt-1 font-bold">Backend Dev @ Zomato | NIT Trichy</p>
+                                </div>
+                            </td>
+                            <td class="py-2 px-4 text-[10px] font-bold text-gray-700 text-center whitespace-nowrap">3.2 Yrs</td>
+                            <td class="py-2 px-4 text-[10px] font-bold text-green-600 text-center font-mono">88%</td>
+                            <td class="py-2 px-4 text-center">
+                                <input type="text" value="24L" onclick="event.stopPropagation();" class="w-16 text-center bg-gray-50 border border-gray-200 rounded font-bold text-[10px] py-1 outline-none focus:ring-1 focus:ring-blue-500">
+                            </td>
+                            <td class="py-2 px-4 text-center text-[9px] text-red-600 font-bold">K8s</td>
+                            <td class="py-2 px-4 text-center">
+                                <button onclick="event.stopPropagation();" class="text-red-600 hover:text-red-800"><i class="fas fa-times-circle text-lg"></i></button>
+                            </td>
+                        </tr>
+
+                        <!-- Candidate 3 -->
+                        <tr class="hover:bg-blue-50 cursor-pointer transition" onclick="openRightBar('amit')">
+                            <td class="py-2 px-4 text-[10px] font-bold text-gray-400">#03</td>
+                            <td class="py-2 px-4 flex items-center gap-2">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold text-[10px]">AM</div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-800 leading-none">Amit Mehta <span class="text-[7px] bg-green-100 text-green-700 px-1 rounded font-black">NEW</span></p>
+                                    <p class="text-[10px] text-blue-500 mt-1 font-bold">Full Stack Dev @ Flipkart | BITS Pilani</p>
+                                </div>
+                            </td>
+                            <td class="py-2 px-4 text-[10px] font-bold text-gray-700 text-center whitespace-nowrap">5.8 Yrs</td>
+                            <td class="py-2 px-4 text-[10px] font-bold text-green-600 text-center font-mono">86%</td>
+                            <td class="py-2 px-4 text-center">
+                                <input type="text" value="28L" onclick="event.stopPropagation();" class="w-16 text-center bg-gray-50 border border-gray-200 rounded font-bold text-[10px] py-1 outline-none focus:ring-1 focus:ring-blue-500">
+                            </td>
+                            <td class="py-2 px-4 text-center text-[9px] text-red-600 font-bold">AWS</td>
+                            <td class="py-2 px-4 text-center">
+                                <button onclick="event.stopPropagation();" class="text-red-600 hover:text-red-800"><i class="fas fa-times-circle text-lg"></i></button>
+                            </td>
+                        </tr>
+
+                        <!-- Candidate 4 -->
+                        <tr class="hover:bg-blue-50 cursor-pointer transition" onclick="openRightBar('sneha')">
+                            <td class="py-2 px-4 text-[10px] font-bold text-gray-400">#04</td>
+                            <td class="py-2 px-4 flex items-center gap-2">
+                                <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-[10px]">SK</div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-800 leading-none">Sneha Kapoor</p>
+                                    <p class="text-[10px] text-blue-500 mt-1 font-bold">DevOps Engineer @ PayTM | DTU</p>
+                                </div>
+                            </td>
+                            <td class="py-2 px-4 text-[10px] font-bold text-gray-700 text-center whitespace-nowrap">2.9 Yrs</td>
+                            <td class="py-2 px-4 text-[10px] font-bold text-green-600 text-center font-mono">84%</td>
+                            <td class="py-2 px-4 text-center">
+                                <input type="text" value="22L" onclick="event.stopPropagation();" class="w-16 text-center bg-gray-50 border border-gray-200 rounded font-bold text-[10px] py-1 outline-none focus:ring-1 focus:ring-blue-500">
+                            </td>
+                            <td class="py-2 px-4 text-center text-[9px] text-green-600 font-bold">-</td>
+                            <td class="py-2 px-4 text-center">
+                                <button onclick="event.stopPropagation();" class="text-red-600 hover:text-red-800"><i class="fas fa-times-circle text-lg"></i></button>
+                            </td>
+                        </tr>
+
+                        <!-- Candidate 5 -->
+                        <tr class="hover:bg-blue-50 cursor-pointer transition" onclick="openRightBar('vikram')">
+                            <td class="py-2 px-4 text-[10px] font-bold text-gray-400">#05</td>
+                            <td class="py-2 px-4 flex items-center gap-2">
+                                <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 font-bold text-[10px]">VG</div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-800 leading-none">Vikram Gupta</p>
+                                    <p class="text-[10px] text-blue-500 mt-1 font-bold">Senior Dev @ Microsoft | IIT Delhi</p>
+                                </div>
+                            </td>
+                            <td class="py-2 px-4 text-[10px] font-bold text-gray-700 text-center whitespace-nowrap">6.2 Yrs</td>
+                            <td class="py-2 px-4 text-[10px] font-bold text-amber-600 text-center font-mono">82%</td>
+                            <td class="py-2 px-4 text-center">
+                                <input type="text" value="35L" onclick="event.stopPropagation();" class="w-16 text-center bg-gray-50 border border-gray-200 rounded font-bold text-[10px] py-1 outline-none focus:ring-1 focus:ring-blue-500">
+                            </td>
+                            <td class="py-2 px-4 text-center text-[9px] text-red-600 font-bold">REACT</td>
+                            <td class="py-2 px-4 text-center">
+                                <button onclick="event.stopPropagation();" class="text-red-600 hover:text-red-800"><i class="fas fa-times-circle text-lg"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PAGINATION -->
+            <div class="flex justify-between items-center mt-4">
+                <div class="text-xs text-gray-500">Showing 1-5 of 124 results</div>
+                <div class="flex gap-2">
+                    <button class="px-3 py-1 bg-white border border-gray-200 rounded text-xs hover:bg-gray-50">Previous</button>
+                    <button class="px-3 py-1 bg-blue-600 text-white rounded text-xs font-bold">1</button>
+                    <button class="px-3 py-1 bg-white border border-gray-200 rounded text-xs hover:bg-gray-50">2</button>
+                    <button class="px-3 py-1 bg-white border border-gray-200 rounded text-xs hover:bg-gray-50">3</button>
+                    <button class="px-3 py-1 bg-white border border-gray-200 rounded text-xs hover:bg-gray-50">Next</button>
+                </div>
+            </div>
+        </main>
+       <!-- RIGHT PREVIEW PANEL -->
+        <aside id="right-sidebar" class="w-[480px] bg-white border-l border-gray-200 overflow-y-auto p-5 flex flex-col">
+            
+            <!-- Profile Header -->
+            <div class="border-b pb-4 mb-4">
+        <div class="flex justify-between items-start mb-3">
+            <div class="flex-1">
+                <h2 class="text-2xl font-black text-gray-800 tracking-tight leading-none mb-1">Rahul Kumar</h2>
+                <p class="text-xs text-blue-600 font-bold uppercase tracking-wide mb-2">Senior Software Engineer</p>
+                <div class="flex flex-wrap gap-3 mt-1">
+                    <a href="/cdn-cgi/l/email-protection#c4b0a1a9b484a3a9a5ada8eaa7aba9" class="flex items-center gap-1.5 text-[11px] text-gray-600 hover:text-blue-600 transition font-medium">
+                        <i class="fas fa-envelope text-blue-500 text-[10px]"></i>
+                        <span><span class="__cf_email__" data-cfemail="96e2f3fbe6d6f1fbf7fffab8f5f9fb">[email&#160;protected]</span></span>
+                    </a>
+                    <span class="text-gray-300">|</span>
+                    <a href="tel:+911234567891" class="flex items-center gap-1.5 text-[11px] text-gray-600 hover:text-blue-600 transition font-medium">
+                        <i class="fas fa-phone text-blue-500 text-[10px]"></i>
+                        <span>+91 12345 67891</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Compact Social Buttons -->
+        <div class="flex gap-2">
+            <a href="#" class="flex-1 bg-[#0077b5] text-white py-1.5 rounded-lg font-bold text-[10px] transition shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fab fa-linkedin text-sm"></i> LinkedIn
+            </a>
+            <a href="#" class="flex-1 bg-gray-900 text-white py-1.5 rounded-lg font-bold text-[10px] transition shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fab fa-github text-sm"></i> GitHub
+            </a>
+            <a href="#" class="flex-1 bg-purple-600 text-white py-1.5 rounded-lg font-bold text-[10px] transition shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fas fa-file-pdf text-sm"></i> Resume
+            </a>
+        </div>
+    </div>
+
+            <div class="space-y-5">
+                
+                <!-- CANDIDATE PROFILE SUMMARY -->
+                <!-- CANDIDATE CALL NOTES BOX -->
+<div class="bg-amber-50 border border-amber-200 p-4 rounded-xl shadow-sm">
+    <div class="flex items-center gap-2 mb-2">
+        <h4 class="text-sm font-black text-gray-800 uppercase tracking-wide">Notes</h4>
+    </div>
+    <textarea 
+        rows="4" 
+        placeholder="Enter details gathered from the call (e.g. current project, salary expectations, reason for change)..."
+        class="w-full p-3 text-xs border border-amber-200 rounded-lg outline-none focus:ring-2 focus:ring-amber-500 bg-white resize-none text-gray-700 placeholder-gray-400"
+    ></textarea>
+    <div class="flex justify-between items-center mt-2">
+        <p class="text-[9px] text-amber-700 font-bold italic"><i class="fas fa-info-circle"></i> These notes are saved for the team</p>
+        <button class="text-[10px] bg-amber-600 text-white px-2 py-1 rounded font-bold hover:bg-amber-700 transition">Save Note</button>
+    </div>
+</div>
+
+                <!-- CURRENT ROLE & RESPONSIBILITIES -->
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 p-4 rounded-xl shadow-sm">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-briefcase text-white text-sm"></i>
+                        </div>
+                        <h4 class="text-sm font-black text-gray-800 uppercase tracking-wide">Current Role</h4>
+                    </div>
+                    <p class="text-xs font-bold text-blue-600 mb-2">Senior Software Development Engineer - II</p>
+                    <ul class="space-y-1.5">
+                        <li class="text-[11px] text-gray-700 flex items-start gap-2">
+                            <i class="fas fa-chevron-right text-blue-500 text-[8px] mt-1"></i>
+                            <span>Leading team of 5 developers in microservices architecture</span>
+                        </li>
+                        <li class="text-[11px] text-gray-700 flex items-start gap-2">
+                            <i class="fas fa-chevron-right text-blue-500 text-[8px] mt-1"></i>
+                            <span>Architecting scalable backend systems for AWS Lambda</span>
+                        </li>
+                        <li class="text-[11px] text-gray-700 flex items-start gap-2">
+                            <i class="fas fa-chevron-right text-blue-500 text-[8px] mt-1"></i>
+                            <span>Mentoring junior engineers on system design best practices</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- KEY PROJECTS -->
+                <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-sm">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-code-branch text-white text-sm"></i>
+                        </div>
+                        <h4 class="text-sm font-black text-gray-800 uppercase tracking-wide">Notable Projects</h4>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="bg-purple-50 p-3 rounded-lg border border-purple-100">
+                            <p class="text-xs font-bold text-gray-800 mb-1">E-Commerce Payment Gateway Integration</p>
+                            <p class="text-[10px] text-gray-600 leading-relaxed mb-2">Designed and implemented high-throughput payment processing system handling 50K+ transactions/day with 99.9% uptime.</p>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="bg-white text-purple-700 px-2 py-0.5 rounded text-[9px] font-bold border border-purple-200">Java</span>
+                                <span class="bg-white text-purple-700 px-2 py-0.5 rounded text-[9px] font-bold border border-purple-200">Spring</span>
+                                <span class="bg-white text-purple-700 px-2 py-0.5 rounded text-[9px] font-bold border border-purple-200">PostgreSQL</span>
+                            </div>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                            <p class="text-xs font-bold text-gray-800 mb-1">Real-time Analytics Dashboard</p>
+                            <p class="text-[10px] text-gray-600 leading-relaxed mb-2">Built serverless data pipeline processing 2TB+ data daily, reduced query time by 65%.</p>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="bg-white text-blue-700 px-2 py-0.5 rounded text-[9px] font-bold border border-blue-200">AWS Lambda</span>
+                                <span class="bg-white text-blue-700 px-2 py-0.5 rounded text-[9px] font-bold border border-blue-200">DynamoDB</span>
+                                <span class="bg-white text-blue-700 px-2 py-0.5 rounded text-[9px] font-bold border border-blue-200">Redis</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CANDIDATE EVALUATION -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-[11px] font-bold text-gray-700 uppercase tracking-widest flex items-center gap-1">
+                            <i class="fas fa-chart-bar text-blue-600"></i> Candidate Evaluation
+                        </h4>
+                        <div class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                            <span class="text-sm font-black">92%</span>
+                            <span class="text-[9px] font-bold"> Match</span>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-200 p-3 rounded-xl mb-3">
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="bg-white border border-gray-200 p-2 rounded-lg text-center">
+                                <p class="text-[8px] text-gray-500 uppercase font-bold mb-1">Technical</p>
+                                <p class="text-base font-black text-red-600">80<span class="text-[9px] font-normal text-gray-400">%</span></p>
+                            </div>
+                            <div class="bg-white border border-gray-200 p-2 rounded-lg text-center">
+                                <p class="text-[8px] text-gray-500 uppercase font-bold mb-1">Experience</p>
+                                <p class="text-base font-black text-green-600">100<span class="text-[9px] font-normal text-gray-400">%</span></p>
+                            </div>
+                            <div class="bg-white border border-gray-200 p-2 rounded-lg text-center">
+                                <p class="text-[8px] text-gray-500 uppercase font-bold mb-1">Culture Fit</p>
+                                <p class="text-base font-black text-green-600">95<span class="text-[9px] font-normal text-gray-400">%</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="bg-white border border-gray-200 p-3 rounded-lg text-center">
+                                <div class="relative inline-flex items-center justify-center mb-2">
+                                    <svg class="w-16 h-16 transform -rotate-90">
+                                        <circle cx="32" cy="32" r="28" stroke="#e5e7eb" stroke-width="6" fill="none" />
+                                        <circle cx="32" cy="32" r="28" stroke="#ef4444" stroke-width="6" fill="none"
+                                            stroke-dasharray="175.93" stroke-dashoffset="35.19" stroke-linecap="round" />
+                                    </svg>
+                                    <span class="absolute text-sm font-black text-red-600">80%</span>
+                                </div>
+                                <p class="text-[9px] text-gray-600 font-bold">Skills Match<br/>(32/40pts)</p>
+                            </div>
+                            <div class="bg-white border border-gray-200 p-3 rounded-lg text-center">
+                                <div class="relative inline-flex items-center justify-center mb-2">
+                                    <svg class="w-16 h-16 transform -rotate-90">
+                                        <circle cx="32" cy="32" r="28" stroke="#e5e7eb" stroke-width="6" fill="none" />
+                                        <circle cx="32" cy="32" r="28" stroke="#10b981" stroke-width="6" fill="none"
+                                            stroke-dasharray="175.93" stroke-dashoffset="0" stroke-linecap="round" />
+                                    </svg>
+                                    <span class="absolute text-sm font-black text-green-600">100%</span>
+                                </div>
+                                <p class="text-[9px] text-gray-600 font-bold">Brand Value<br/>(20/20pts)</p>
+                            </div>
+                            <div class="bg-white border border-gray-200 p-3 rounded-lg text-center">
+                                <div class="relative inline-flex items-center justify-center mb-2">
+                                    <svg class="w-16 h-16 transform -rotate-90">
+                                        <circle cx="32" cy="32" r="28" stroke="#e5e7eb" stroke-width="6" fill="none" />
+                                        <circle cx="32" cy="32" r="28" stroke="#10b981" stroke-width="6" fill="none"
+                                            stroke-dasharray="175.93" stroke-dashoffset="0" stroke-linecap="round" />
+                                    </svg>
+                                    <span class="absolute text-sm font-black text-green-600">100%</span>
+                                </div>
+                                <p class="text-[9px] text-gray-600 font-bold">Stability<br/>(15/15pts)</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="bg-white border border-gray-200 p-3 rounded-lg text-center">
+                                <div class="relative inline-flex items-center justify-center mb-2">
+                                    <svg class="w-16 h-16 transform -rotate-90">
+                                        <circle cx="32" cy="32" r="28" stroke="#e5e7eb" stroke-width="6" fill="none" />
+                                        <circle cx="32" cy="32" r="28" stroke="#10b981" stroke-width="6" fill="none"
+                                            stroke-dasharray="175.93" stroke-dashoffset="0" stroke-linecap="round" />
+                                    </svg>
+                                    <span class="absolute text-sm font-black text-green-600">100%</span>
+                                </div>
+                                <p class="text-[9px] text-gray-600 font-bold">Education<br/>(10/10pts)</p>
+                            </div>
+                            <div class="bg-white border border-gray-200 p-3 rounded-lg text-center">
+                                <div class="relative inline-flex items-center justify-center mb-2">
+                                    <svg class="w-16 h-16 transform -rotate-90">
+                                        <circle cx="32" cy="32" r="28" stroke="#e5e7eb" stroke-width="6" fill="none" />
+                                        <circle cx="32" cy="32" r="28" stroke="#10b981" stroke-width="6" fill="none"
+                                            stroke-dasharray="175.93" stroke-dashoffset="0" stroke-linecap="round" />
+                                    </svg>
+                                    <span class="absolute text-sm font-black text-green-600">100%</span>
+                                </div>
+                                <p class="text-[9px] text-gray-600 font-bold">Impact<br/>(15/15pts)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SCORING REASONS -->
+                    <div class="mt-3 bg-blue-50 border border-blue-100 rounded-xl p-3 space-y-2">
+                        <h5 class="text-[10px] font-black text-blue-700 uppercase tracking-widest flex items-center gap-1 mb-2">
+                            <i class="fas fa-robot text-blue-500"></i> AI Scoring Rationale
+                        </h5>
+                        <div class="space-y-1.5">
+                            <div class="flex items-start gap-2">
+                                <span class="mt-0.5 w-4 h-4 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-times text-red-500 text-[8px]"></i>
+                                </span>
+                                <p class="text-[10px] text-gray-700 leading-snug"><span class="font-bold text-gray-800">Skills (80%)</span> — Strong Java, Spring Boot &amp; PostgreSQL match. Penalised 20pts for missing Docker &amp; Kubernetes which are mandatory requirements.</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="mt-0.5 w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-check text-green-600 text-[8px]"></i>
+                                </span>
+                                <p class="text-[10px] text-gray-700 leading-snug"><span class="font-bold text-gray-800">Brand Value (100%)</span> — Amazon (FAANG) background gives maximum brand score. IIT Roorkee Tier-1 college adds institutional credibility.</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="mt-0.5 w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-check text-green-600 text-[8px]"></i>
+                                </span>
+                                <p class="text-[10px] text-gray-700 leading-snug"><span class="font-bold text-gray-800">Stability (100%)</span> — Consistent tenures: 2 yrs at TechStartup X, 3.5 yrs at AWS. No job-hopping detected.</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="mt-0.5 w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-check text-green-600 text-[8px]"></i>
+                                </span>
+                                <p class="text-[10px] text-gray-700 leading-snug"><span class="font-bold text-gray-800">Education (100%)</span> — B.Tech CSE from IIT Roorkee with CGPA 8.7/10 exceeds the requirement benchmark.</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="mt-0.5 w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-check text-green-600 text-[8px]"></i>
+                                </span>
+                                <p class="text-[10px] text-gray-700 leading-snug"><span class="font-bold text-gray-800">Impact (100%)</span> — Quantifiable achievements: 22% latency reduction, scaled to 1.2M+ concurrent users, leading a team of 5 engineers.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXPERIENCE TIMELINE -->
+                <div>
+                    <h4 class="text-[11px] font-bold text-gray-700 uppercase mb-3 tracking-widest flex items-center gap-1">
+                        <i class="fas fa-history text-blue-600"></i> Work History
+                    </h4>
+                    <div class="space-y-3 ml-2 border-l-2 border-blue-200 pl-4">
+                        <div class="relative">
+                            <div class="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-blue-600 border-2 border-white shadow-sm"></div>
+                            <div class="bg-blue-50 border border-blue-100 p-2.5 rounded-lg">
+                                <div class="flex justify-between items-start mb-1">
+                                    <p class="text-xs font-bold text-gray-800 leading-none">Amazon Web Services</p>
+                                    <span class="text-[8px] bg-green-600 text-white px-2 py-0.5 rounded-full font-bold">CURRENT</span>
+                                </div>
+                                <p class="text-[10px] text-blue-600 font-bold mb-1">SDE-II</p>
+                                <p class="text-[9px] text-gray-500 font-bold">Jul 2021 - Present • 3.5 Years</p>
+                            </div>
+                        </div>
+                        <div class="relative opacity-75">
+                            <div class="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-gray-400 border-2 border-white"></div>
+                            <div class="bg-gray-50 border border-gray-200 p-2.5 rounded-lg">
+                                <p class="text-xs font-bold text-gray-700 leading-none mb-1">TechStartup X</p>
+                                <p class="text-[10px] text-gray-600 font-bold mb-1">SDE-I</p>
+                                <p class="text-[9px] text-gray-500 font-bold">Jun 2019 - Jun 2021 • 2 Years</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KEY ACHIEVEMENTS & METRICS -->
+                <div class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 p-3 rounded-xl">
+                    <h4 class="text-[11px] font-bold text-green-700 uppercase mb-3 tracking-widest flex items-center gap-1">
+                        <i class="fas fa-trophy"></i> Key Achievements
+                    </h4>
+                    <div class="space-y-2">
+                        <div class="flex items-start gap-2">
+                            <div class="w-6 h-6 bg-amber-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-bolt text-white text-xs"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-[10px] font-bold text-gray-800">Performance Optimization</p>
+                                <p class="text-[9px] text-gray-600">Reduced API latency by <span class="text-green-700 font-bold">22%</span></p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <div class="w-6 h-6 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-users text-white text-xs"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-[10px] font-bold text-gray-800">Scalability Achievement</p>
+                                <p class="text-[9px] text-gray-600">Scaled system to <span class="text-blue-700 font-bold">1.2M+ concurrent users</span></p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <div class="w-6 h-6 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-award text-white text-xs"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-[10px] font-bold text-gray-800">Team Leadership</p>
+                                <p class="text-[9px] text-gray-600">Leading team of <span class="text-purple-700 font-bold">5 engineers</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SKILLS ASSESSMENT -->
+                <div class="grid grid-cols-1 gap-3">
+                    <!-- Must Have Skills -->
+                    <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-sm">
+                <h4 class="text-[10px] font-black text-gray-700 uppercase mb-3 flex items-center gap-1 tracking-wider">
+                    <i class="fas fa-check-double text-blue-600"></i> Must-Have Skills &amp; Gaps
+                </h4>
+                <div class="flex flex-wrap gap-1.5">
+                    <!-- Matched -->
+                    <span class="bg-green-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-sm">Java</span>
+                    <span class="bg-green-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-sm">Spring Boot</span>
+                    <span class="bg-green-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-sm">PostgreSQL</span>
+                    
+                    <!-- Missing (Now Red and Integrated) -->
+                    <span class="bg-red-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-sm flex items-center gap-1">
+                        <i class="fas fa-times-circle"></i> Docker
+                    </span>
+                    <span class="bg-red-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-sm flex items-center gap-1">
+                        <i class="fas fa-times-circle"></i> Kubernetes
+                    </span>
+                </div>
+            </div>
+
+                    <!-- Good to Have Skills -->
+                    <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl">
+                        <h4 class="text-[10px] font-black text-blue-700 uppercase mb-2 flex items-center gap-1 tracking-wider">
+                            <i class="fas fa-check-circle"></i> Good-to-Have (Matched)
+                        </h4>
+                        <div class="flex flex-wrap gap-1.5">
+                            <span class="bg-blue-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-sm">AWS</span>
+                            <span class="bg-blue-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-sm">Redis</span>
+                            <span class="bg-blue-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-sm">MongoDB</span>
+                            <span class="bg-blue-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-sm">REST API</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EDUCATION & CERTIFICATION -->
+                <div class="grid grid-cols-1 gap-3">
+                    <div class="bg-amber-50 p-3 rounded-xl border border-amber-200">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fas fa-university text-amber-600 text-lg"></i>
+                            <div class="flex-1">
+                                <p class="text-xs font-black text-gray-800 leading-none">IIT Roorkee</p>
+                                <p class="text-[10px] text-amber-700 font-bold mt-0.5">B.Tech CSE • CGPA: 8.7/10</p>
+                            </div>
+                            <span class="bg-amber-600 text-white px-2 py-1 rounded-full text-[8px] font-black">TIER-1</span>
+                        </div>
+                        <p class="text-[9px] text-gray-600 font-bold">Class of 2019</p>
+                    </div>
+                </div>
+
+                <!-- RECRUITER ACTIONS -->
+                <div class="grid grid-cols-2 gap-2">
+                <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg text-xs transition shadow-md flex items-center justify-center gap-1.5">
+                    <i class="fas fa-check-circle"></i> Shortlist
+                </button>
+                <button class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-lg text-xs transition shadow-md flex items-center justify-center gap-1.5">
+                    <i class="fas fa-pause-circle"></i> Hold
+                </button>
+                <button class="col-span-2 bg-white hover:bg-red-50 border-2 border-red-200 text-red-600 font-bold py-2 rounded-lg text-xs transition flex items-center justify-center gap-1.5">
+                     Select
+                </button>
+               
+            </div>
+
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function filterCandidates(query) {
+            const rows = document.querySelectorAll('tbody tr');
+            const clearBtn = document.getElementById('search-clear');
+            clearBtn.classList.toggle('hidden', query.trim() === '');
+            const q = query.toLowerCase().trim();
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = (!q || text.includes(q)) ? '' : 'none';
+            });
+        }
+
+        function toggleFilters() {
+            const sidebar = document.getElementById('left-sidebar');
+            if (sidebar.style.display === "none") {
+                sidebar.style.display = "block";
+            } else {
+                sidebar.style.display = "none";
+            }
+        }
+
+        function openRightBar(candidateId) {
+            // Right sidebar is always visible; could be extended to swap candidate data
+            const rightSidebar = document.getElementById('right-sidebar');
+            if (rightSidebar) {
+                rightSidebar.scrollTop = 0;
+            }
+        }
+    </script>
+</body>
+</html>
