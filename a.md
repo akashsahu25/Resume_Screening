@@ -201,15 +201,15 @@ Retrieves a list of available jobs.
     {
       "jobId": "job_001",
       "title": "Software Engineer",
-      "company": "Tech Corp",
-      "status": "Open",
+      "applicants": "214",
+      "shortlisted": "24",
       "postedDate": "2023-10-25"
     },
     {
       "jobId": "job_002",
       "title": "Product Designer",
-      "company": "Creative Studio",
-      "status": "Applied",
+     "applicants": "214",
+      "shortlisted": "24",
       "postedDate": "2023-10-24"
     }
     .
@@ -234,7 +234,77 @@ Retrieves a list of available jobs.
   "message": "Unauthorized access. Please login again."
 }
 ```
+---
+### **1. Fetch Jobs with Filter (GET)**
 
+Retrieves a list of available jobs. When a user selects a department from the dropdown menu, the selected value is passed as a query parameter in the URL to filter the results.
+
+*   **Endpoint:** `/jobs`
+*   **Method:** `GET`
+*   **Auth Required:** Yes (JWT)
+
+#### **Query Parameters**
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `department` | `string` | **(Optional)** When a user selects a department from the dropdown, it is passed as a parameter (e.g., Engineering, Design, HR). If no department is selected, all jobs are returned. |
+
+#### **Request Headers**
+| Field | Value | Description |
+| :--- | :--- | :--- |
+| `Authorization` | `Bearer <JWT_TOKEN>` | The token received from the Login API. |
+| `Content-Type` | `application/json` | Standard JSON header. |
+
+#### **Example Request URL**
+`GET /jobs?department=Engineering`
+
+---
+
+#### **Response**
+
+**Success (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Jobs retrieved successfully",
+  "departmentSelected": "Engineering",
+  "data": [
+    {
+      "jobId": "job_001",
+      "title": "Backend Developer",
+      "department": "Engineering",
+      "applicants": "150",
+      "shortlisted": "15",
+      "postedDate": "2023-11-01"
+    },
+    {
+      "jobId": "job_005",
+      "title": "Frontend Engineer",
+      "department": "Engineering",
+      "applicants": "98",
+      "shortlisted": "10",
+      "postedDate": "2023-11-05"
+    }
+  ]
+}
+```
+
+**Error (401 Unauthorized):**
+Occurs if the token is missing, expired, or invalid.
+```json
+{
+  "status": "error",
+  "message": "Unauthorized access. Please login again."
+}
+```
+
+**Error (404 Not Found):**
+Occurs if no jobs exist for the selected department.
+```json
+{
+  "status": "error",
+  "message": "No jobs found for the selected department."
+}
+```
 ---
 
 
